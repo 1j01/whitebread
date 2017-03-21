@@ -7,7 +7,7 @@ remove = (item, {from: array})->
 
 is_probably_gibberish = (input)->
 	# FIXME: "birds"/"words"/"forwards" etc. considered gibberish
-	# as well as "acupuncture", "country", "birthday"...
+	# as well as "acupuncture", "country", "birthday", "right", "hands", "commands"...
 	input.replace(/[tsc]h/g, "x").replace(/(gg|tt|pp|bb|ff|bb|zz)[lr]/g, "$1").match(/[qwrtpsdfghjklzxcvbnm]{3}/)
 
 value = (object, prop)->
@@ -77,9 +77,7 @@ commands = [
 			if player.inventory.length is 0
 				msg("You don't have anything.")
 			else
-				#msg(player.inventory.join(", "))
 				display_item = (item)->
-					console.log item
 					"<li>#{item.name}</li>"
 				msg(player.inventory.map(display_item).join(""))
 	}
@@ -407,8 +405,7 @@ rooms = [
 						"The toad is too <i>unpleasantly warm</i> to take."
 						"The toad warms your heart, because you put it in your breast pocket."
 					]
-					# NOTE: This isn't supposed to just be a linear progression
-					# it'll be based on if you place things next to it
+					# NOTE: This'll be based on if you place things next to the toad
 					desc = descriptions[@desc_index++]
 					if @desc_index >= descriptions.length - 1
 						@takeable = true
@@ -590,6 +587,11 @@ find_object_by_name = (room, object_name)->
 					if object_name.match(/^(wall|floor|ceiling|.*(door|exit))s?$/i)
 						# TODO: examine doors and such
 						msg("You can't #{command.name} the #{object_name}.")
+						# The floor is the floor is the floor is the floor. (It's the floor.)
+						# The ceiling's the ceiling you see, you see?
+						# The walls are the walls are all walls that are wally.
+						# The doors tho, they'll set you free!
+						# The doors are the entrances, the exits, the... yeah. Doors.
 					else if object_name.match(/^(stuff|things|everything|it|them)s?$/i)
 						# TODO: maybe allow "take it"/"take" after examining something
 						# maybe just "take it"
@@ -606,6 +608,7 @@ find_object_by_name = (room, object_name)->
 							msg("There are no #{object_name.replace(/some /i, "")} here.")
 						else
 							# FIXME: > examine the thing "There's no the thing here."
+							# also TODO: handle misspellings somehow?
 							msg("There's no #{object_name} here.")
 			else
 				command.action()
@@ -617,25 +620,20 @@ find_object_by_name = (room, object_name)->
 			msg("Gibberish.")
 		else if input.match(/\?$/)
 			msg("I can't answer your questions.")
-		else if input.match(/^(hm|that's interesting\.*|okay\.*)$/)
+			# I don't know. It is a conundrum. It's hard to say. How should I know? I am not an oracle.
+			# I'm not at liberty to say. Ask me later. That's a good question -- or a bad one, I don't know.
+			# 42. If I have 5 apples, and I give you 3 oranges, how many teeth does a canary have?
+		else if input.match(/^(hm|um|okay|k|yeah|(?:that's )?(?:interesting|weird)|that just happened)\.*$/i)
+			# TODO: "hmmm... um, okay, so like.. that just happened!?? mkay" or not, y'know, maybe don't handle that
 			msg("Indeed.")
-		else if input.match(/^(go nowhere)$/)
-			# TODO: should there be a single go command that matches anything and then parses directions or room or exit names?
+		else if input.match(/^(go nowhere|stay(?: (?:put|(?:right )?t?here|where you are))?)$/i)
 			msg("You stay where you are.")
-		else if input.match(/^(do nothing)$/)
+		else if input.match(/^(do nothing)$/i)
 			msg("You do nothing. Nothing happens.")
 		else
 			msg("???")
 
 msg = (html_content, options)->
-	# if typeof html_content is "function"
-	# 	html_content = html_content()
-	# 	if typeof html_content isnt "string"
-	# 		throw new TypeError("expected string (html content) to be returned from function passed to msg(); got #{typeof html_content} instead")
-	# else
-	# 	if typeof html_content isnt "string"
-	# 		throw new TypeError("expected string (html content) or function as first argument to msg()")
-	
 	if typeof html_content isnt "string"
 		throw new TypeError("expected string (html content) as first argument to msg()")
 	

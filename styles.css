@@ -33,6 +33,7 @@ body {
 	box-shadow: inset 4px 0 15px rgba(255, 255, 255, 0.6);
 }
 
+/* TODO: use em instead of b */
 b {
 	color: #926AC3;
 }
