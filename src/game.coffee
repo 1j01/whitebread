@@ -635,7 +635,7 @@ find_object_by_name = (room, object_name)->
 			break # don't match any more commands
 	
 	unless found_command
-		if input.replace(/[tsc]h/g, "x").match(/[qwrtpsdfghjklzxcvbnm]{3}/)
+		if input.replace(/[tsc]h/g, "x").replace(/(gg|tt|pp|bb|ff|bb|zz)[lr]/g, "$1").match(/[qwrtpsdfghjklzxcvbnm]{3}/)
 			msg("Gibberish.")
 		else if input.match(/\?$/)
 			msg("I can't answer your questions.")
