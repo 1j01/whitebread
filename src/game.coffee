@@ -5,13 +5,18 @@ remove = (item, {from: array})->
 	if index >= 0
 		array.splice(index, 1)
 
+is_probably_gibberish = (input)->
+	# FIXME: "birds"/"words"/"forwards" etc. considered gibberish
+	# as well as "acupuncture", "country", "birthday"...
+	input.replace(/[tsc]h/g, "x").replace(/(gg|tt|pp|bb|ff|bb|zz)[lr]/g, "$1").match(/[qwrtpsdfghjklzxcvbnm]{3}/)
+
+value = (object, prop)->
+	if typeof object[prop] is "function"
+		return object[prop]()
+	return object[prop]
+
 describe_current_room = (room)->
-	desc = player.current_room.description
-	# TODO: handle all these function-or-value things in one place (probably msg)
-	if typeof desc is "function"
-		msg(desc())
-	else
-		msg(desc)
+	msg(value(player.current_room, "description"))
 
 commands = [
 	{
@@ -23,7 +28,7 @@ commands = [
 		name: "examine"
 		regex: /^(?:x|examine|l|look at|look|check out) (.+)/i
 		action: (object)->
-			msg(object.description)
+			msg(value(object, "description"))
 			# TODO: examine exits
 	}
 	{
@@ -42,14 +47,12 @@ commands = [
 					remove(object, from: player.current_room.objects)
 					player.inventory.push(object)
 					object.quantity -= 1
-				
 				# TODO: duplicate objects and such for taking things of a different quantities
 				# also things like take two/all/some/etc. if need be
 			
-			if typeof object.take_description is "function"
-				msg(object.take_description())
-			else if object.take_description
-				msg(object.take_description)
+			# NOTE: take_description can be a message for failing to take as well
+			if object.take_description
+				msg(value(object, "take_description"))
 			else if object.takeable
 				msg("Taken.")
 			else
@@ -83,6 +86,8 @@ commands = [
 	
 	# TODO: use, walk/go into/to / enter room name / door name
 	# TODO: hammertime
+	# TODO: (flip/toggle/switch/activate/actuate/press/flick/hit) (on/off/on off/power) (switch/button) / turn on/off tv / turn tv on/off
+	# TODO: unplug tv; smash tv; kick/punch tv; sit in front of/and watch/gaze into the tv/screen / keep watching / examine mcd's
 	
 	{
 		name: "view help"
@@ -167,7 +172,7 @@ for direction_name, {dx, dy} of directions
 				if found_exit
 					if found_exit.locked
 						console.log "not letting you thru", found_exit
-						msg(found_exit.locked_description or "The door is locked.")
+						msg(value(found_exit, "locked_description") or "The door is locked.")
 					else
 						for room in rooms
 							if room.name is exit_to_room_name
@@ -521,7 +526,7 @@ exits = [
 		direction_name: "north"
 	}
 	{
-		names: /Domestic([\- ]looking)? Door|/i
+		names: /(Domestic([\- ]looking)?) Door|/i
 		description: ""
 		takeable: false
 		take_description: "" # TODO?
@@ -555,8 +560,6 @@ player = {
 	inventory: []
 }
 
-describe_current_room()
-
 
 find_object_by_name = (room, object_name)->
 	found_object = null
@@ -585,20 +588,24 @@ find_object_by_name = (room, object_name)->
 					command.action(found_object)
 				else
 					if object_name.match(/^(wall|floor|ceiling|.*(door|exit))s?$/i)
+						# TODO: examine doors and such
 						msg("You can't #{command.name} the #{object_name}.")
 					else if object_name.match(/^(stuff|things|everything|it|them)s?$/i)
+						# TODO: maybe allow "take it"/"take" after examining something
+						# maybe just "take it"
 						msg("Be a little more specific.")
 					else if object_name.match(/^nothing/)
 						if command.name is "examine"
 							msg("You close your eyes for a moment.")
 						else
 							msg("You #{command.name} nothing. Nothing happens.")
-					else if object_name.replace(/[tsc]h/g, "x").match(/[qwrtpsdfghjklzxcvbnm]{3}/)
+					else if is_probably_gibberish(object_name)
 						msg("There's no gibberish here.")
 					else
 						if object_name.match /s$/i
 							msg("There are no #{object_name.replace(/some /i, "")} here.")
 						else
+							# FIXME: > examine the thing "There's no the thing here."
 							msg("There's no #{object_name} here.")
 			else
 				command.action()
@@ -606,7 +613,7 @@ find_object_by_name = (room, object_name)->
 			break # don't match any more commands
 	
 	unless found_command
-		if input.replace(/[tsc]h/g, "x").replace(/(gg|tt|pp|bb|ff|bb|zz)[lr]/g, "$1").match(/[qwrtpsdfghjklzxcvbnm]{3}/)
+		if is_probably_gibberish(input)
 			msg("Gibberish.")
 		else if input.match(/\?$/)
 			msg("I can't answer your questions.")
@@ -619,3 +626,32 @@ find_object_by_name = (room, object_name)->
 			msg("You do nothing. Nothing happens.")
 		else
 			msg("???")
+
+msg = (html_content, options)->
+	# if typeof html_content is "function"
+	# 	html_content = html_content()
+	# 	if typeof html_content isnt "string"
+	# 		throw new TypeError("expected string (html content) to be returned from function passed to msg(); got #{typeof html_content} instead")
+	# else
+	# 	if typeof html_content isnt "string"
+	# 		throw new TypeError("expected string (html content) or function as first argument to msg()")
+	
+	if typeof html_content isnt "string"
+		throw new TypeError("expected string (html content) as first argument to msg()")
+	
+	unless options?.auto_br is no
+		html_content = html_content.replace(/\n/g, "<br>")
+	
+	con.logHTML(html_content)
+
+con = new SimpleConsole
+	handleCommand: interpret,
+	placeholder: "Enter commands",
+	autofocus: true,
+	storageID: "whitebread"
+
+document.body.appendChild(con.element)
+con.handleUncaughtErrors()
+
+describe_current_room()
+
