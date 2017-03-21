@@ -5,9 +5,9 @@ remove = (item, {from: array})->
 	if index >= 0
 		array.splice(index, 1)
 
-describe_room = (room)->
+describe_current_room = (room)->
 	desc = player.current_room.description
-	#console.log "desc", desc
+	# TODO: handle all these function-or-value things in one place (probably msg)
 	if typeof desc is "function"
 		msg(desc())
 	else
@@ -17,8 +17,7 @@ commands = [
 	{
 		name: "look around"
 		regex: /^(?:l|look|look around|look around you|examine room|where am I\?*|where\?*)$/i
-		action: (object)->
-			describe_room(player.current_room)
+		action: describe_current_room
 	}
 	{
 		name: "examine"
@@ -44,7 +43,8 @@ commands = [
 					player.inventory.push(object)
 					object.quantity -= 1
 				
-				# TODO: duplicate objects and such for taking things of a finite quantity
+				# TODO: duplicate objects and such for taking things of a different quantities
+				# also things like take two/all/some/etc. if need be
 			
 			if typeof object.take_description is "function"
 				msg(object.take_description())
@@ -173,7 +173,7 @@ for direction_name, {dx, dy} of directions
 							if room.name is exit_to_room_name
 								console.log "letting you thru", found_exit
 								player.current_room = room
-								describe_room(room)
+								describe_current_room()
 				else
 					msg("You can't go that way.")
 		}
@@ -437,20 +437,10 @@ rooms = [
 			
 		]
 	}
-	
-	#{
-		#name: "Next Room"
-		#description: """
-			#
-		#"""
-		#exits: {
-			#
-		#}
-	#}
 ]
 
 ###
-Future Objects / Object Format?
+Future Objects (and Object Format)
 ###
 future_objects = [
 	{
@@ -487,18 +477,6 @@ future_objects = [
 		names: /Broken Television/i
 		description: """The television is now lifeless. Its shattered screen bears glass teeth, trapped in an enternal, silent scream."""
 		takeable: true
-		take_description: """desc"""
-	}
-	{
-		names: /Object_RegExp/i
-		description: """desc"""
-		takeable: false
-		take_description: """desc"""
-	}
-	{
-		names: /Object_RegExp/i
-		description: """desc"""
-		takeable: false
 		take_description: """desc"""
 	}
 	
@@ -577,15 +555,8 @@ player = {
 	inventory: []
 }
 
-describe_room(player.current_room)
+describe_current_room()
 
-# no taking!
-#{
-	#names: [""]
-	#description: ""
-	#takeable: false
-	#take_description: ""
-#}
 
 find_object_by_name = (room, object_name)->
 	found_object = null
