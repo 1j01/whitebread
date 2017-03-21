@@ -1,0 +1,46 @@
+{
+  "name": "whitebread",
+  "description": "A surreal text adventure game",
+  "version": "0.1.0",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/1j01/whitebread.git"
+  },
+  "bugs": {
+    "url": "http://github.com/1j01/whitebread/issues"
+  },
+  "contributors": [
+    "Jadon Odhner",
+    "Isaiah Odhner <isaiahodhner@gmail.com>"
+  ],
+  "license": "UNLICENSED",
+  "keywords": [
+    "game",
+    "text-adventure-game",
+    "text-adventure",
+    "adventure",
+    "text",
+    "lingual",
+    "language",
+    "silly",
+    "fun",
+    "surreal",
+    "surrealism",
+    "surrealist",
+    "dream",
+    "dreams",
+    "dreaming",
+    "dreamlike",
+    "web",
+    "web-game",
+    "cli-game",
+    "terminal-game"
+  ],
+  "bin": {
+    "whitebread": "./bin/cli.js"
+  },
+  "dependencies": {
+    "minimist": "^1.2.0"
+  }
+}
