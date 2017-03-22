@@ -1,5 +1,5 @@
 
-@rooms = [
+rooms = [
 	{
 		name: "Antechamber"
 		description: """
@@ -230,7 +230,11 @@
 						"The toad warms your heart, because you put it in your breast pocket."
 					]
 					# NOTE: This'll be based on if you place things next to the toad
-					desc = descriptions[@desc_index++]
+					# not just trying to take it repeatedly.
+					desc = descriptions[@desc_index]
+					# prepare the state for next time
+					# NOTE: this could be cleaner with a function take() that returns a success bool and message together
+					@desc_index = Math.min(@desc_index + 1, descriptions.length - 1)
 					if @desc_index >= descriptions.length - 1
 						@takeable = true
 					desc
@@ -326,7 +330,7 @@ future_objects = [
 	}
 ]
 
-@exits = [
+exits = [
 	{
 		names: /Emergency exit/i
 		description: "This door is for emergency use only."
@@ -375,3 +379,6 @@ future_objects = [
 		direction_name: ""
 	}
 ]
+
+(global ? @).rooms = rooms
+(global ? @).exits = exits

@@ -10,10 +10,11 @@ value = (object, prop)->
 		return object[prop]()
 	return object[prop]
 
-@describe_current_room = (room)->
-	msg(value(player.current_room, "description"))
+describe_current_room = (room)->
+	msg(value(game.current_room, "description"))
 
-@commands = [
+
+commands = [
 	{
 		name: "look around"
 		regex: /^(?:l|look|look around|look around you|examine room|where am I\?*|where\?*)$/i
@@ -29,21 +30,24 @@ value = (object, prop)->
 	{
 		name: "take"
 		regex: /^(?:take|pick up|pick) (.+)/i
-		action: (object)->
-			if object.takeable is true
-				
-				if object in player.inventory
+		action: (object, game)->
+			if value(object, "takeable") is true
+				# msg("take!")
+				if object in game.player.inventory
 					#msg("You've already taken #{if object.nam}")
 					#msg("You're holding #{if object.name.sdfgsf then "them" else "it"}")
 					#msg("Already in your inventory.")
 					msg("Most people want what they don't already have.")
 					return
 				else if object.quantity > 0 or object.quantity is undefined
-					remove(object, from: player.current_room.objects)
-					player.inventory.push(object)
-					object.quantity -= 1
+					remove(object, from: game.current_room.objects)
+					game.player.inventory.push(object)
+					# if object.quantity?
+					# 	object.quantity -= 1
 				# TODO: duplicate objects and such for taking things of a different quantities
 				# also things like take two/all/some/etc. if need be
+				else
+					msg("object.quantity is #{object.quantity}")
 			
 			# NOTE: take_description can be a message for failing to take as well
 			if object.take_description
@@ -55,26 +59,26 @@ value = (object, prop)->
 	}
 	{
 		name: "drop"
-		regex: /^(?:drop|leave|put down|put) (.+)(?: down)(?: here)?/i
-		action: (object)->
+		regex: /^(?:drop|leave|put down|put) (.+)(?: down)?(?: here)?/i
+		action: (object, game)->
 			# FIXME
-			remove(object, from: player.inventory)
-			#array = player.inventory
+			remove(object, from: game.player.inventory)
+			#array = game.player.inventory
 			#index = array.indexOf(object)
 			#array.splice(index, 1)
-			player.current_room.objects.push(object) unless object.destroy_on_drop is true
-			msg(object.drop_description or "Dropped.")
+			game.current_room.objects.push(object) unless object.destroy_on_drop is true
+			msg(value(object, "drop_description") or "Dropped.")
 	}
 	{
 		name: "view inventory"
 		regex: /^(?:(?:view|review|open|check|look at|l|examine|x) )?(?:inventory|inv|i)$/i
-		action: ->
-			if player.inventory.length is 0
+		action: (game)->
+			if game.player.inventory.length is 0
 				msg("You don't have anything.")
 			else
 				display_item = (item)->
 					"<li>#{item.name}</li>"
-				msg(player.inventory.map(display_item).join(""))
+				msg(game.player.inventory.map(display_item).join(""))
 	}
 	
 	# TODO: use, walk/go into/to / enter room name / door name
@@ -159,19 +163,23 @@ for direction_name, {dx, dy} of directions
 		commands.push {
 			name: "go #{direction_name}"
 			regex: new RegExp("^(?:go? ?|continue )?(?:a?head(ing)? )?(?:to(?: the)? )?(?:#{abbr}|#{direction_name})(?:-?(?:wards?|ways))?$", "i")
-			action: ->
-				{found_exit, exit_to_room_name} = find_exit(player.current_room, direction_name)
+			action: (game)->
+				{found_exit, exit_to_room_name} = find_exit(game.current_room, direction_name)
 				
 				if found_exit
 					if found_exit.locked
-						console.log "not letting you thru", found_exit
+						# console.log "not letting you thru", found_exit
 						msg(value(found_exit, "locked_description") or "The door is locked.")
 					else
 						for room in rooms
 							if room.name is exit_to_room_name
-								console.log "letting you thru", found_exit
-								player.current_room = room
+								# console.log "letting you thru", found_exit
+								game.current_room = room
 								describe_current_room()
 				else
 					msg("You can't go that way.")
 		}
+
+(global ? @).describe_current_room = describe_current_room
+(global ? @).commands = commands
+

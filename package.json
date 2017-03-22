@@ -43,6 +43,7 @@
     "whitebread": "./bin/cli.js"
   },
   "dependencies": {
+    "coffee-script": "^1.12.4",
     "minimist": "^1.2.0"
   }
 }
