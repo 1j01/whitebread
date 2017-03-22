@@ -35,7 +35,7 @@ Options:
 	process.stdin.setEncoding("utf8");
 
 	process.stdin.on("data", function (input) {
-		if (input === "quit\n") {
+		if (input.trim() === "quit") {
 			process.exit();
 		} else {
 			try {
