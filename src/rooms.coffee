@@ -189,7 +189,7 @@ rooms = [
 			}
 			{
 				name: "Television"
-				names: /Television|TV/i
+				names: /Television|TV|Telly/i
 				description: """The screen shows a barren wasteland. The sky is dark, but the ground is lit as if it were day. A McDonald's stands alone on the perfectly flat, brown, plane that stretches on forever. <span class="rec">[REC]</span> blinks in and out in the top right corner. There is an <b>on off switch</b>."""
 				takeable: false
 				take_description: """The wire is connected directly to the wall. There's no way to take the TV without rendering it useless."""
@@ -212,13 +212,14 @@ rooms = [
 			}
 			{
 				name: "Bookshelf"
-				names: /Bookshelf/i
+				names: /Bookshelf|Bookshelves/i
 				description: """All of the titles and content of the books is just garbled nonsense. Or maybe you can't read, you aren't sure."""
 				takeable: false
 				take_description: """Knowledge is power, but you would need to read all of the books to be able to pick up the shelf, so what would be the point?"""
 			}
 			{
 				name: "Toad Statuette"
+				# names: /(?:Silver )?(?:Toad Statuette|Toad Statue|Toad|Amphibian)/i
 				names: /Toad Statuette|Toad Statue|Toad|Amphibian/i
 				description: """The polished silver amphibian sits proud, smiling at its lot in life."""
 				takeable: false
