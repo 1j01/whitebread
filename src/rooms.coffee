@@ -66,8 +66,9 @@ rooms = [
 		name: "Ordinary Room"
 		description: """
 			You are in an ordinary room.
-			A startlingly ordinary room. Four white walls, white ceiling, white floor. 
+			A startlingly ordinary room. Four white walls, white ceiling, white floor.
 			There are some doors. A domestic-looking door leads north. A door of white plastic leads east. A regal wood and stone door leads south. A soft yellow door leads west.
+			You can see a <b>hammer</b>.
 		"""
 		exits: {
 			south: "Antechamber"
