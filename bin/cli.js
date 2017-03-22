@@ -6,8 +6,8 @@ require("../src/commands.coffee");
 require("../src/rooms.coffee");
 require("../src/game.coffee");
 
+var chalk = require("chalk");
 var argv = require("minimist")(process.argv.slice(2))
-// var repl = require("repl");
 
 if (argv.version || argv.v) {
 	console.log(`v${require("../package.json").version}`);
@@ -25,14 +25,11 @@ Options:
 	var game = new Game;
 	global.game = game;
 	global.msg = function(html_content){
-		console.log(html_content);
+		var output = html_content
+			.replace(/<b>([^\/]*)<\/b>/gi, (m, text)=> chalk.bold.magenta(text))
+			.replace(/<i>([^\/]*)<\/i>/gi, (m, text)=> chalk.italic.gray(text));
+		console.log(output);
 	};
-	// repl.start({
-	// 	prompt: "> ",
-	// 	eval: function myEval(cmd, context, filename, callback) {
-	// 		callback(null, game.interpret(cmd));
-	// 	}
-	// });
 
 	process.stdin.resume();
 	process.stdin.setEncoding("utf8");
