@@ -4,14 +4,43 @@ if require?
 	require("./rooms.coffee")
 
 is_probably_gibberish = (input)->
-	# FIXME: "birds"/"words"/"forwards" etc. considered gibberish
-	# as well as "acupuncture", "country", "birthday", "right", "hands", "commands"...
-	input.replace(/[tsc]h/g, "x").replace(/(gg|tt|pp|bb|ff|bb|zz)[lr]/g, "$1").match(/[qwrtpsdfghjklzxcvbnm]{3}/)
+	parsed = input
+		.replace(/(st|tr|ct|rd|gh|r[tsc]h|nd)/g, "x")
+		.replace(/[tsc]h/g, "x")
+		.replace(/(gg|tt|pp|bb|ff|bb|zz)[lr]/g, "$1")
+	parsed.match(/[qwrtpsdfghjklzxcvbnm]{3}/)? or
+	parsed.match(/[eiou]{3}/)?
 
-# @player = {
-# 	current_room: rooms[0]
-# 	inventory: []
-# }
+test_fn = (fn, cases)->
+	if console?.assert?
+		test = (args, expected)->
+			result = fn(args...)
+			console.assert result is expected, "#{fn.name}(#{(JSON.stringify(arg) for arg in args).join(", ")}) should be #{JSON.stringify(expected)}; got #{JSON.stringify(result)}"
+		if Array.isArray(cases)
+			test(args ? [arg], expected) for {args, arg, expected} in cases
+		else
+			test([arg], expected) for arg, expected of cases
+
+test_fn is_probably_gibberish,
+	"birds": no
+	"words": no
+	"forwards": no
+	"acupuncture": no
+	"country": no
+	"birthday": no
+	"right": no
+	"hands": no
+	"commands": no
+	"install": no
+	"tv": no
+	"sdf": yes
+	"qwertyuiop": yes
+	"jkl": yes
+	"trustionsx": yes
+	"hjkl;'": yes
+	# ";l][": yes
+	# "(*FIOESDF": yes
+	# "SHDGFKSJDFH": yes
 
 class Game
 	constructor: ->
@@ -59,7 +88,7 @@ class Game
 							# The walls are the walls are all walls that are wally.
 							# The doors tho, they'll set you free!
 							# The doors are the entrances, the exits, the... yeah. Doors.
-						else if object_name.match(/^(stuff|things|everything|it|them)s?$/i)
+						else if object_name.match(/^(stuff|things?|everything|it|them)s?$/i)
 							# TODO: maybe allow "take it"/"take" after examining something
 							# maybe just "take it"
 							msg("Be a little more specific.")
