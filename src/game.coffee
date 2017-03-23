@@ -1,8 +1,4 @@
 
-if require?
-	require("./commands.coffee")
-	require("./rooms.coffee")
-
 is_probably_gibberish = (input)->
 	parsed = input
 		.replace(/(st|tr|ct|rd|gh|r[tsc]h|nd)/g, "x")

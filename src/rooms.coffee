@@ -7,9 +7,6 @@ rooms = [
 			The antechamber is a small, hexagonal room. Roman <b>columns</b> at each corner prop up a low, vaulted ceiling. <b>Vines</b> sprout from ornate <b>flowerpots</b> and climb up the walls, filling the room with greenery, and making it feel even smaller than it is. Each vine sports strangely geometric <b>blossoms</b>.
 			A regal wood and stone door leads north. To the south is the emergency exit.
 		"""
-		exits: {
-			north: "Ordinary Room"
-		}
 		objects: [
 			{
 				names: /Flowerpots?|pots/i
@@ -70,9 +67,6 @@ rooms = [
 			There are some doors. A domestic-looking door leads north. A door of white plastic leads east. A regal wood and stone door leads south. A soft yellow door leads west.
 			You can see a <b>hammer</b>.
 		"""
-		exits: {
-			south: "Antechamber"
-		}
 		objects: [
 			{
 				name: "Hammer"
@@ -90,19 +84,16 @@ rooms = [
 			The mudroom has clay tile floors covered in <b>bootprints</b>. A number of <b>shelves</b> line the walls for storing coats and boots. The air is pleasantly warm. Piles and piles of discarded outerwear fill the room. It is quite cozy and welcoming. 
 			A simple door leads further north. The front door leads south.
 		"""
-		exits: {
-			north: "living room"
-		}
 		objects: [
 			{
-				names: /pile of boots|boot pile|all the boots/i
-				description: """There are boots for every kind of bad weather. If you wanted, you could probably find something in your size. Just skimming, you can see some <b>yellow galoshes</b> and <b>snowshoes</b> that look about right."""
+				names: /pile of (boot|shoe)s|(boot|shoe) pile|all the (boot|shoe)s/i
+				description: "There are boots for every kind of bad weather. If you wanted, you could probably find something in your size. Just skimming, you can see some <b>yellow galoshes</b> and <b>snowshoes</b> that look about right."
 				takeable: false
 				take_description: "You only have two feet."
 			}
 			{
-				names: /^boots$/i
-				description: """There are boots for every kind of bad weather. If you wanted, you could probably find something in your size. Just skimming, you can see some <b>yellow galoshes</b> and <b>snowshoes</b> that look about right."""
+				names: /^(the )?(boots|shoes)$/i
+				description: "There are boots for every kind of bad weather. If you wanted, you could probably find something in your size. Just skimming, you can see some <b>yellow galoshes</b> and <b>snowshoes</b> that look about right."
 				takeable: false
 				take_description: "Which boots? So many to choose from."
 			}
@@ -110,12 +101,12 @@ rooms = [
 				# TODO: if you drop these in a room without other boots you should be able to refer to them as just "boots"
 				name: "Yellow Galoshes"
 				names: /galoshes|yellow galoshes|yellow boots/i
-				description: """
+				description: "
 					Yellow rubber boots.
 					<i>+75% Moisture Resistance
 					+1 Endurance
 					-1 Agility</i>
-				"""
+				"
 				takeable: true
 				take_description: ""
 				drop_description: "Silly boots."
@@ -131,30 +122,28 @@ rooms = [
 					# or we could return [success, message] or {success, message}
 					# or we could call msg() and return success
 					# where success would really mean "use default behavior"
-					@drop_description = """Damn these are some tight boots, in both senses of the word. You won't be getting these off any time soon."""
+					@drop_description = "Damn these are some tight boots, in both senses of the word. You won't be getting these off any time soon."
 					# You wrench your feet from the boots' vice-like grasp.
 					# Currently worn.
 			}
 			{
 				name: "Snowshoes"
 				names: /snowshoes|snow shoes|rackets/i
-				description: """Really inconvenient shoes for really inconvenient weather.
-				"""
+				description: "Really inconvenient shoes for really inconvenient weather."
 				takeable: true
 				take_description: ""
 				drop_description: "Bye snowshoes."
 			}
 			{
 				names: /bootprints?|footprints?|prints/i
-				description: """There are prints of every shape, size, and shoe. It looks like a lot of people have taken off their muddy shoes in here. There are even some deer tracks..
-				"""
+				description: "There are prints of every shape, size, and shoe. It looks like a lot of people have taken off their muddy shoes in here. There are even some deer tracks.."
 				takeable: false
 				take_description: "You would need some plaster."
 				drop_description: ""
 			}
 			{
 				names: /shelves/i
-				description: """None of the boots or coats seem to have actually made it to the shelves."""
+				description: "None of the boots or coats seem to have actually made it to the shelves."
 				takeable: false
 				take_description: "You can't, because they have some walls stuck to them."
 				drop_description: ""
@@ -176,87 +165,90 @@ rooms = [
 			# e.g. implicitly re-planting a flower you picked when you say "drop flower")
 			"""
 				You are in a living room.
-				A wide open room with a nice warm <b>fireplace</b>. #{once_text} Several <b>bookshelves</b> carved from the trunks of large trees line the room. The center of the room is taken up by a glass <b>coffee table</b> and a <b>carpet</b>. A <b>television</b> is set in one corner, and a <b>piano</b> in the other.
+				A wide open room with a nice warm <b>fireplace</b>.#{once_text} Several <b>bookshelves</b> carved from the trunks of large trees line the room. The center of the room is taken up by a glass <b>coffee table</b> and a <b>carpet</b>. A <b>television</b> is set in one corner, and a <b>piano</b> in the other.
 				Two open archways lead elsewhere. A wide archway leads north. A medium archway leads east. A simple door leads south.	
 			"""
-		exits: {
-			
-		}
 		objects: [
 			{
 				# TODO: names should probably be an array
 				# we can generate a regexp from that and use the first item as the canonical name
 				name: "Coffee Table"
 				names: /Coffee Table|Table/i
-				description: """The coffee table is empty except for an ashtray with a single <b>cigarette</b> in it. It is still smoking."""
+				description: "The coffee table is empty except for an ashtray with a single <b>cigarette</b> in it. It is still smoking."
 				takeable: false
-				take_description: """It seems to be nailed down."""
+				take_description: "It seems to be nailed down."
 			}
 			{
 				name: "Carpet"
 				names: /Carpet|Rug/i
-				description: """The patterns remind you of an eyed hawk-moth: beautiful and vaguely threatening. It is made of mousepad foam."""
+				description: "The patterns remind you of an eyed hawk-moth: beautiful and vaguely threatening. It is made of mousepad foam."
 				takeable: true
-				take_description: """You roll the carpet up and tuck it under your arm."""
+				take_description: "You roll the carpet up and tuck it under your arm."
 			}
 			{
 				name: "Fireplace"
 				names: /Fireplace|Firepit/i
-				description: """Despite the warmth radiating out from it, there is no fire. A silver <b>toad statuette</b> sits in the middle of its brick home."""
+				description: "Despite the warmth radiating out from it, there is no fire. A silver <b>toad statuette</b> sits in the middle of its brick home."
 				takeable: false
 				take_description: "No."
 			}
 			{
 				name: "Television"
 				names: /Television|TV|Telly/i
-				description: """#{tv_screen_description = """The screen shows a barren wasteland. The sky is dark, but the ground is lit as if it were day. A McDonald's stands alone on the perfectly flat, brown, plane that stretches on forever. <span class="rec">[REC]</span> blinks in and out in the top right corner."""} There is an <b>on off switch</b>."""
+				description: "#{
+					tv_screen_description =
+						"The screen shows a barren wasteland. The sky is dark, but the ground is lit as if it were day.
+						A McDonald's stands alone on the perfectly flat, brown, plane that stretches on forever.
+						<span class=\"rec\">[REC]</span> blinks in and out in the top right corner."
+					}
+					There is an <b>on off switch</b>."
 				takeable: false
-				take_description: """The wire is connected directly to the wall. There's no way to take the TV without rendering it useless."""
+				take_description: "The wire is connected directly to the wall. There's no way to take the TV without rendering it useless."
 				subobjects: [
 					{
 						name: "On/Off Switch"
 						names: /On[ /]Off Switch|Switch|On[ /]Off Button|Power Button/i
-						description: """The switch holds supreme power over the television."""
+						description: "The switch holds supreme power over the television."
 						takeable: false
-						take_description: """Maybe take the whole TV?"""
+						take_description: "Maybe take the whole TV?"
 					}
 					{
 						name: "Screen"
 						names: /screen/i
 						description: tv_screen_description
 						takeable: false
-						take_description: """Maybe take the whole TV?"""
+						take_description: "Maybe take the whole TV?"
 					}
 				]
 				smash: ->
 					@name = "Broken Television"
-					@description = """The television is now lifeless. Its shattered screen bears glass teeth, trapped in an enternal, silent scream."""
+					@description = "The television is now lifeless. Its shattered screen bears glass teeth, trapped in an enternal, silent scream."
 					for object in @subobjects when object.name is "Screen"
-						object.description = """The shattered screen bears glass teeth, trapped in an enternal, silent scream."""
+						object.description = "The shattered screen bears glass teeth, trapped in an enternal, silent scream."
 					@takeable = true
-					@take_description = """You rip the destroyed television from the wall."""
-					@drop_description = """You drop the cumbersome piece of junk."""
+					@take_description = "You rip the destroyed television from the wall."
+					@drop_description = "You drop the cumbersome piece of junk."
 					msg("The screen is smashed in one swift blow. Light sputters briefly, and then goes out.")
 			}
 			{
 				name: "Piano"
 				names: /Piano/i
-				description: """Besides being bright red, it is a perfectly ordinary piano."""
+				description: "Besides being bright red, it is a perfectly ordinary piano."
 				takeable: true
-				take_description: """You pick up the piano and put it snugly into your shirt pocket."""
+				take_description: "You pick up the piano and put it snugly into your shirt pocket."
 			}
 			{
 				name: "Bookshelf"
 				names: /Bookshelf|Bookshelves/i
-				description: """All of the titles and content of the books is just garbled nonsense. Or maybe you can't read, you aren't sure."""
+				description: "All of the titles and content of the books is just garbled nonsense. Or maybe you can't read, you aren't sure."
 				takeable: false
-				take_description: """Knowledge is power, but you would need to read all of the books to be able to pick up the shelf, so what would be the point?"""
+				take_description: "Knowledge is power, but you would need to read all of the books to be able to pick up the shelf, so what would be the point?"
 			}
 			{
 				name: "Toad Statuette"
 				# names: /(?:Silver )?(?:Toad Statuette|Toad Statue|Toad|Amphibian)/i
 				names: /Toad Statuette|Toad Statue|Toad|Amphibian/i
-				description: """The polished silver amphibian sits proud, smiling at its lot in life."""
+				description: "The polished silver amphibian sits proud, smiling at its lot in life."
 				takeable: false
 				desc_index: 0
 				take_description: ->
@@ -286,33 +278,30 @@ rooms = [
 			The far wall is a <b>mirror</b>, but it seems to only reflect the room and not the things in it. A <b>ladder</b> sits in the center of the room. A <b>salt shaker</b> is placed precariously on top. The <b>black cat</b> is missing. The room seems very precarious, like a game error waiting to happen. Ominous.
 			A white plastic door leads west.
 		"""
-		exits: {
-			
-		}
 		objects: [
 			{
 				names: /Mirror/i
-				description: """Since no objects (yourself included) are reflected in it, the mirror serves mainly to make the room appear much larger than it is."""
+				description: "Since no objects (yourself included) are reflected in it, the mirror serves mainly to make the room appear much larger than it is."
 				takeable: false
-				take_description: """The mirror is an entire wall, you cannot carry it."""
+				take_description: "The mirror is an entire wall, you cannot carry it."
 			}
 			{
 				names: /Step Ladder|Ladder/i
-				description: """It's a really friendly looking ladder."""
+				description: "It's a really friendly looking ladder."
 				takeable: false
-				take_description: """Ye dare not take it, lest ye spill the salt."""
+				take_description: "Ye dare not take it, lest ye spill the salt."
 			}
 			{
 				names: /Salt|Shaker/i
-				description: """Spilling salt is normally pretty bad, but this salt is even worse."""
+				description: "Spilling salt is normally pretty bad, but this salt is even worse."
 				takeable: false
-				take_description: """There is no way to reach it without risking knocking it over."""
+				take_description: "There is no way to reach it without risking knocking it over."
 			}
 			{
 				names: /Black Cat|Cat|Feline/i
-				description: """There is not a black cat. It's missing."""
+				description: "There is not a black cat. It's missing."
 				takeable: false
-				take_description: """Picking up random cats is a bad idea."""
+				take_description: "Picking up random cats is a bad idea."
 			}
 		]
 	}
@@ -324,15 +313,12 @@ rooms = [
 			A house to the southwest has thin curls of smoke rising from the chimney.
 			One of the houses’ doors leads east.
 		"""
-		exits: {
-			
-		}
 		objects: [
 			{
 				names: /Smoke/i
-				description: """Smokey."""
+				description: "Smokey."
 				takeable: false
-				take_description: """You don't have an umbrella."""
+				take_description: "You don't have an umbrella."
 			}
 		]
 	}
@@ -344,15 +330,12 @@ rooms = [
 			A set of shallow steps leads up to the second floor.
 			An archway leads back onto the street.
 		"""
-		exits: {
-			# TODO: climb/ascend/go up/take stairs/steps / go upstairs / go to the second floor / ascend to the upstairs
-		}
 		objects: [
 			{
 				names: /The Mother|Mother/i
-				description: """She has a long, teardrop shaped head and neck, squat body and short legs, and four long, spindly arms. Her skin is greyish pink, and she isn’t wearing anything except jewelry. With two of her hands the mother tends to something that is <b>approximately a baby</b>, while with another she tends a <b>frying pan</b>."""
+				description: "She has a long, teardrop shaped head and neck, squat body and short legs, and four long, spindly arms. Her skin is greyish pink, and she isn’t wearing anything except jewelry. With two of her hands the mother tends to something that is <b>approximately a baby</b>, while with another she tends a <b>frying pan</b>."
 				takeable: false
-				take_description: """Lewd."""
+				take_description: "Lewd."
 			}
 			# TODO: guests, steps/stairs, archway/exit, frying pan, approximate baby
 		]
@@ -363,37 +346,18 @@ rooms = [
 		description: """
 			Room format for copying.
 		"""
-		exits: {
-			
-		}
 		objects: [
-			
+			{
+				names: /Object Name|Alt Name|Another Name|Synonym/i
+				description: ""
+				takeable: false
+				take_description: ""
+			}
 		]
 	}
 ]
 
-###
-	# object format (for copying)
-	{
-		names: /Object_RegExp/i
-		description: """desc"""
-		takeable: false
-		take_description: """desc"""
-	}
-	# door format (for copying)
-	{
-		names: /Object_RegExp/i
-		description: """desc"""
-		takeable: false
-		take_description: """desc"""
-		
-		locked: false
-		between: ["From_Room", "To_Room"]
-		direction_name: ""
-	}
-###
-
-exits = [
+doorways = [
 	{
 		names: /Emergency exit/i
 		description: "This door is for emergency use only."
@@ -458,18 +422,19 @@ exits = [
 		between: ["Slanted Street", "Mother Home"]
 		direction_name: "southwest"
 		# TODO: "exit house"/"leave"/"go outside" etc. rather than just "go northeast"/"ne"
+		# TODO: climb/ascend/go up/take stairs/steps / go upstairs / go to the second floor / ascend to the upstairs
 	}
-	# exit format
+	# doorway format
 	{
-		names: /Name_RegExp/i
+		names: /Doorway Name|Alt Name/i
 		description: ""
 		takeable: false
 		take_description: ""
 		locked: false
-		between: ["From_Room", "To_Room"]
+		between: ["From Room", "To Room"]
 		direction_name: ""
 	}
 ]
 
 (global ? @).rooms = rooms
-(global ? @).exits = exits
+(global ? @).doorways = doorways

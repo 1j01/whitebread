@@ -1,6 +1,5 @@
 
 remove = (item, {from: array})->
-	#console.log "remove", item, "from", array
 	index = array.indexOf(item)
 	if index >= 0
 		array.splice(index, 1)
@@ -25,18 +24,16 @@ commands = [
 		regex: /^(?:x|examine|l|look at|look|check out) (.+)/i
 		action: (object)->
 			msg(value(object, "description"))
-			# TODO: examine exits
+			# TODO: examine doorways
+			# we could consider doorways be objects present in multiple rooms
+			# or continue to consider them separately as objects between rooms
 	}
 	{
 		name: "take"
 		regex: /^(?:take|pick up|pick) (.+)/i
 		action: (object, game)->
 			if value(object, "takeable") is true
-				# msg("take!")
 				if object in game.player.inventory
-					#msg("You've already taken #{if object.nam}")
-					#msg("You're holding #{if object.name.sdfgsf then "them" else "it"}")
-					#msg("Already in your inventory.")
 					msg("Most people want what they don't already have.")
 					return
 				else if object.quantity > 0 or object.quantity is undefined
@@ -44,7 +41,8 @@ commands = [
 					game.player.inventory.push(object)
 					# if object.quantity?
 					# 	object.quantity -= 1
-				# TODO: duplicate objects and such for taking things of a different quantities
+					# 	copyof(object).quantity = 1
+				# TODO: duplicate objects and such for taking things that have different quantities
 				# also things like take two/all/some/etc. if need be
 				else
 					msg("object.quantity is #{object.quantity}")
@@ -61,12 +59,8 @@ commands = [
 		name: "drop"
 		regex: /^(?:drop|leave|put down|put) (.+)(?: down)?(?: here)?/i
 		action: (object, game)->
-			# FIXME
 			remove(object, from: game.player.inventory)
-			#array = game.player.inventory
-			#index = array.indexOf(object)
-			#array.splice(index, 1)
-			game.current_room.objects.push(object) unless object.destroy_on_drop is true
+			game.current_room.objects.push(object)
 			msg(value(object, "drop_description") or "Dropped.")
 	}
 	{
@@ -147,13 +141,13 @@ oposite_of_direction = (direction_name)->
 find_exit = (room, direction_name)->
 	found_exit = null
 	
-	for exit in exits
-		if exit.between[0] is room.name and exit.direction_name is direction_name
-			found_exit = exit
-			exit_to_room_name = exit.between[1]
-		else if exit.between[1] is room.name and exit.direction_name is oposite_of_direction(direction_name)
-			found_exit = exit
-			exit_to_room_name = exit.between[0]
+	for doorway in doorways
+		if doorway.between[0] is room.name and doorway.direction_name is direction_name
+			found_exit = doorway
+			exit_to_room_name = doorway.between[1]
+		else if doorway.between[1] is room.name and doorway.direction_name is oposite_of_direction(direction_name)
+			found_exit = doorway
+			exit_to_room_name = doorway.between[0]
 	
 	{found_exit, exit_to_room_name}
 
@@ -168,12 +162,10 @@ for direction_name, {dx, dy} of directions
 				
 				if found_exit
 					if found_exit.locked
-						# console.log "not letting you thru", found_exit
 						msg(value(found_exit, "locked_description") or "The door is locked.")
 					else
 						for room in rooms
 							if room.name is exit_to_room_name
-								# console.log "letting you thru", found_exit
 								game.current_room = room
 								describe_current_room()
 				else
