@@ -18,6 +18,18 @@ commands = [
 		name: "look around"
 		regex: /^(?:l|look|look around|look around you|examine room|where am I\?*|where\?*)$/i
 		action: describe_current_room
+		# TODO/FIXME:
+		# look at room
+		# There's no room here.
+		# check out the room
+		# There's no the room here.
+		# look around the room
+		# There's no around the room here.
+		# look around at the room
+		# There's no around at the room here.
+		# "examine room"/"look at room"/"check out the room" should work based on the "examine" verb applying to the current room
+		# I guess rooms will need take a default take message...
+		# "You can't take rooms." or "You try to take it all in, but you know you'll forget it anyways."
 	}
 	{
 		name: "examine"
@@ -76,7 +88,6 @@ commands = [
 	}
 	
 	# TODO: use, walk/go into/to / enter room name / door name
-	# TODO: hammertime
 	# TODO: (flip/toggle/switch/activate/actuate/press/flick/hit) (on/off/on off/power) (switch/button) / turn on/off tv / turn tv on/off
 	# TODO: unplug tv; smash tv; kick/punch tv; sit in front of/and watch/gaze into the tv/screen / keep watching / examine mcd's
 	
@@ -96,16 +107,23 @@ commands = [
 			""", auto_br: false)
 	}
 	
+	{
+		name: "hammertime"
+		regex: /^(?:stop[!\.,]*(?: [\/\-])? )?(?:hammertime)/i
+		action: (game)->
+			msg("Can't touch this.")
+	}
+	
 	# only for copying:
 	{
-		name: "boogie with it"
-		regex: /^(?:boogie with) (.+)/i
-		action: (object)->
+		name: "do something with"
+		regex: /^(?:do something with) (.+)/i
+		action: (object, game)->
 	}
 	{
-		name: "just dance"
-		regex: /^(?:dance)/i
-		action: (object)->
+		name: "just do something"
+		regex: /^(?:do something)/i
+		action: (game)->
 	}
 ]
 
