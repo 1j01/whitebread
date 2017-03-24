@@ -29,6 +29,10 @@ test_fn is_probably_gibberish,
 	"commands": no
 	"install": no
 	"tv": no
+	# FIXME:
+	# "Consonants": no
+	# "length": no
+	# "alignment": no
 	"sdf": yes
 	"qwertyuiop": yes
 	"jkl": yes

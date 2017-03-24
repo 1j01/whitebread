@@ -70,6 +70,10 @@ commands = [
 	{
 		name: "drop"
 		regex: /^(?:drop|leave|put down|put) (.+)(?: down)?(?: here)?/i
+		# TODO: "let go of x" / "stop carrying x" / "stop holding x" / "abandon x" / "set x down"
+		# "leave x behind" works already although so does "drop x no wait don't"
+		# we might also want to allow you to specify locations to put things with prepositions but we don't really need that yet
+		# ("set x on the table" / "place x ontop of the table" / "leave x on the floor" / "drop x on[to] the ground" / "put x back where it was")
 		action: (object, game)->
 			remove(object, from: game.player.inventory)
 			game.current_room.objects.push(object)
@@ -78,13 +82,24 @@ commands = [
 	{
 		name: "view inventory"
 		regex: /^(?:(?:view|review|open|check|look at|l|examine|x) )?(?:inventory|inv|i)$/i
+		# TODO: "take inventory"
+		# TODO: "What am I holding?" / "What am I carrying?" / "What do I have?" / "What's in my inventory?"
+		# / "wut supplies 'n' stuff do i got on me" / "whUu7 item(s) do i am be most currently having possession of, LOL?"
 		action: (game)->
 			if game.player.inventory.length is 0
 				msg("You don't have anything.")
 			else
+				# display_item = (item)->
+				# 	"<li>#{item.name}</li>"
+				# 
+				# msg("<ul class=\"inventory\">" + game.player.inventory.map(display_item).join("") + "</ul>")
 				display_item = (item)->
-					"<li>#{item.name}</li>"
-				msg(game.player.inventory.map(display_item).join(""))
+					"a #{item.name}"
+				msg("You have #{game.player.inventory.map(display_item).join(", ")}.")
+				# TODO: use lowercase names
+				# TODO: custom descriptors e.g. "You have a hammer, some flowers, you have a carpet tucked under arm, and you're wearing some yellow galoshes."
+				# "You have a hammer, some flowers, a carpet tucked under arm, and you're wearing some yellow galoshes."
+				# "You have a hammer, some flowers, a pair of yellow galoshes, and you have a carpet tucked under arm."
 	}
 	
 	# TODO: use, walk/go into/to / enter room name / door name

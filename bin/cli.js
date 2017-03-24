@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 require("coffee-script/register");
-// var Game = require("../src/Game.coffee");
 require("../src/commands.coffee");
 require("../src/rooms.coffee");
 require("../src/game.coffee");
@@ -25,6 +24,8 @@ Options:
 	var game = new Game;
 	global.game = game;
 	global.msg = function(html_content){
+		// TODO: handle help text and the TV's "[REC]" (ideally blinking)
+		// could use htmlparser
 		var output = html_content
 			.replace(/<b>([^\/]*)<\/b>/gi, (m, text)=> chalk.bold.magenta(text))
 			.replace(/<i>([^\/]*)<\/i>/gi, (m, text)=> chalk.italic.gray(text));
