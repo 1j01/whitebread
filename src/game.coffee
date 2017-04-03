@@ -114,6 +114,9 @@ class Game
 		unless found_command
 			if is_probably_gibberish(input)
 				msg("Gibberish.")
+			else if input.match(/abra[ \-]?cadabra|all?a[ \-]?[ck]azam/)
+				# This specifically phrased witty remark is a reference to the game Colossal Cave Adventure
+				msg("Good try, but that is an old worn-out magic word.")
 			else if input.match(/\?$/)
 				msg("I can't answer your questions.")
 				# I don't know. It is a conundrum. It's hard to say. How should I know? I am not an oracle.
