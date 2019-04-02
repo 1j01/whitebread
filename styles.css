@@ -6,6 +6,53 @@ body {
 	flex: 1;
 }
 
+/*.simple-console {
+	max-width: 60em;
+	margin: 0 auto;
+}
+.simple-console-output {
+	padding-top: 1rem;
+}*/
+
+/*.simple-console .entry {
+	max-width: 60em;
+}*/
+.simple-console-input {
+	/*max-width: 59em;*/
+	/*min-width: 0;*/
+	/*width: 100%;*/
+	/*width: 100em;*/
+}
+/*.simple-console .entry,
+.simple-console-input-wrapper {
+	margin: 0 auto;
+}*/
+/*.simple-console .entry {
+	margin: 0 auto;
+}
+.simple-console-input {
+	max-width: 59em;
+}
+.simple-console-input-wrapper {
+	justify-content: center;
+}
+
+.simple-console .entry:first-child {
+	padding-top: 1rem;
+}*/
+
+.input-chevron {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	margin-left: -1rem;
+	height: 1rem;
+}
+
+
+/* TODO: somehow absorb the scrollbar into the margin when max-width is in effect */
+
 ::-webkit-scrollbar {
 	width: 12px;
 }
@@ -33,10 +80,21 @@ body {
 	box-shadow: inset 4px 0 15px rgba(255, 255, 255, 0.6);
 }
 
+/*.inventory {
+	margin-top: 0;
+	margin-bottom: 0;
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	border-radius: 0.1em;
+	display: inline-block;
+	padding: 0.5em;
+	list-style: none;
+}*/
+
 /* TODO: use em instead of b */
 b {
 	color: #926AC3;
 }
+
 .rec {
 	color: rgb(214, 29, 29);
 	font-size: smaller;

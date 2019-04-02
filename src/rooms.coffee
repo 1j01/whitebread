@@ -202,31 +202,36 @@ rooms = [
 						<span class=\"rec\">[REC]</span> blinks in and out in the top right corner."
 					}
 					There is an <b>on off switch</b>."
-				takeable: false
-				take_description: "The wire is connected directly to the wall. There's no way to take the TV without rendering it useless."
+				destroyed: false
+				take: (event)->
+					if @destroyed
+						msg("You rip the destroyed television from the wall.")
+					else
+						event.preventDefault()
+						msg("The wire is connected directly to the wall. There's no way to take the TV without rendering it useless.")
 				subobjects: [
 					{
 						name: "On/Off Switch"
 						names: /On[ /]Off Switch|Switch|On[ /]Off Button|Power Button/i
 						description: "The switch holds supreme power over the television."
-						takeable: false
-						take_description: "Maybe take the whole TV?"
+						take: (event)->
+							event.preventDefault()
+							msg("Maybe take the whole TV?")
 					}
 					{
 						name: "Screen"
 						names: /screen/i
 						description: tv_screen_description
-						takeable: false
-						take_description: "Maybe take the whole TV?"
+						take: (event)->
+							event.preventDefault()
+							msg("Maybe take the whole TV?")
 					}
 				]
-				smash: ->
+				smash: (event)->
 					@name = "Broken Television"
 					@description = "The television is now lifeless. Its shattered screen bears glass teeth, trapped in an enternal, silent scream."
 					for object in @subobjects when object.name is "Screen"
 						object.description = "The shattered screen bears glass teeth, trapped in an enternal, silent scream."
-					@takeable = true
-					@take_description = "You rip the destroyed television from the wall."
 					@drop_description = "You drop the cumbersome piece of junk."
 					msg("The screen is smashed in one swift blow. Light sputters briefly, and then goes out.")
 			}
@@ -234,24 +239,24 @@ rooms = [
 				name: "Piano"
 				names: /Piano/i
 				description: "Besides being bright red, it is a perfectly ordinary piano."
-				takeable: true
-				take_description: "You pick up the piano and put it snugly into your shirt pocket."
+				take: (event)->
+					msg("You pick up the piano and put it snugly into your shirt pocket.")
 			}
 			{
 				name: "Bookshelf"
 				names: /Bookshelf|Bookshelves/i
 				description: "All of the titles and content of the books is just garbled nonsense. Or maybe you can't read, you aren't sure."
-				takeable: false
-				take_description: "Knowledge is power, but you would need to read all of the books to be able to pick up the shelf, so what would be the point?"
+				take: (event)->
+					event.preventDefault()
+					msg("Knowledge is power, but you would need to read all of the books to be able to pick up the shelf, so what would be the point?")
 			}
 			{
 				name: "Toad Statuette"
 				# names: /(?:Silver )?(?:Toad Statuette|Toad Statue|Toad|Amphibian)/i
 				names: /Toad Statuette|Toad Statue|Toad|Amphibian/i
 				description: "The polished silver amphibian sits proud, smiling at its lot in life."
-				takeable: false
 				desc_index: 0
-				take_description: ->
+				take: (event)->
 					descriptions = [
 						"The toad is radiating heat too intense to touch!"
 						"The toad is radiating heat too intense to touch."
@@ -264,8 +269,8 @@ rooms = [
 					# prepare the state for next time
 					# NOTE: this could be cleaner with a function take() that returns a success bool and message together
 					@desc_index = Math.min(@desc_index + 1, descriptions.length - 1)
-					if @desc_index >= descriptions.length - 1
-						@takeable = true
+					if @desc_index < descriptions.length - 1
+						event.preventDefault()
 					desc
 			}
 		]
@@ -282,8 +287,9 @@ rooms = [
 			{
 				names: /Mirror/i
 				description: "Since no objects (yourself included) are reflected in it, the mirror serves mainly to make the room appear much larger than it is."
-				takeable: false
-				take_description: "The mirror is an entire wall, you cannot carry it."
+				take: (event)->
+					event.preventDefault()
+					msg("The mirror is an entire wall, you cannot carry it.")
 			}
 			{
 				names: /Step Ladder|Ladder/i
